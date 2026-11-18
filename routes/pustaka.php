@@ -15,15 +15,67 @@ Route::name('pustaka.')
         ValidateCsrfToken::class,
     ])
     ->group(function () {
-        Route::get('/', [PustakaPublikController::class, 'home'])->name('home');
-        Route::get('/katalog', [PustakaPublikController::class, 'catalog'])->name('catalog');
-        Route::get('/katalog/open-library', [PustakaPublikController::class, 'openLibrary'])->name('open-library');
-        Route::view('/tentang', 'pustaka.about')->name('about');
+        /*
+        |--------------------------------------------------------------------------
+        | Beranda Website Lama
+        |--------------------------------------------------------------------------
+        */
 
-        Route::prefix('katalog/{buku}')->where(['buku' => '[a-z0-9]+(?:-[a-z0-9]+)*'])->group(function () {
-            Route::get('/', [PustakaPublikController::class, 'detail'])->name('detail');
-            Route::get('/baca', [PustakaPublikController::class, 'reader'])->name('reader');
-            Route::get('/pdf', [PustakaPublikController::class, 'preview'])->name('preview');
-            Route::get('/unduh', [PustakaPublikController::class, 'download'])->name('download');
-        });
+        Route::get(
+            '/pustaka-lama',
+            [PustakaPublikController::class, 'home']
+        )->name('home');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Katalog dan Open Library
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/katalog',
+            [PustakaPublikController::class, 'catalog']
+        )->name('catalog');
+
+        Route::get(
+            '/katalog/open-library',
+            [PustakaPublikController::class, 'openLibrary']
+        )->name('open-library');
+
+        Route::view(
+            '/tentang',
+            'pustaka.about'
+        )->name('about');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Detail, Pratinjau, dan Unduhan Buku
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('katalog/{buku}')
+            ->where([
+                'buku' => '[a-z0-9]+(?:-[a-z0-9]+)*',
+            ])
+            ->group(function () {
+                Route::get(
+                    '/',
+                    [PustakaPublikController::class, 'detail']
+                )->name('detail');
+
+                Route::get(
+                    '/baca',
+                    [PustakaPublikController::class, 'reader']
+                )->name('reader');
+
+                Route::get(
+                    '/pdf',
+                    [PustakaPublikController::class, 'preview']
+                )->name('preview');
+
+                Route::get(
+                    '/unduh',
+                    [PustakaPublikController::class, 'download']
+                )->name('download');
+            });
     });

@@ -1,15 +1,27 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Website Katalog REST API
+| Website Utama Pustaka Jaringan
 |--------------------------------------------------------------------------
 |
-| Antarmuka Bootstrap yang terhubung dengan REST API Laravel.
-| Menyediakan login, daftar koleksi, pencarian Open Library,
-| serta pengelolaan buku untuk Admin.
+| Halaman utama menggunakan katalog terbaru yang terintegrasi
+| dengan REST API, SQLite, Open Library, dan Laravel Sanctum.
+|
+*/
+
+Route::view('/', 'katalog')
+    ->name('katalog.home');
+
+/*
+|--------------------------------------------------------------------------
+| Alamat Alternatif
+|--------------------------------------------------------------------------
+|
+| URL /aplikasi tetap dipertahankan untuk kompatibilitas.
 |
 */
 
@@ -18,12 +30,11 @@ Route::view('/aplikasi', 'katalog')
 
 /*
 |--------------------------------------------------------------------------
-| Website Pustaka Sebelumnya
+| Website Pustaka Versi Awal
 |--------------------------------------------------------------------------
 |
-| Seluruh halaman dan fitur website lama tetap dipertahankan.
-| Route utama, katalog PDF, detail, dan halaman Open Library
-| yang sudah dibuat teman kelompok tidak dihapus.
+| Beranda lama tersedia melalui /pustaka.
+| Halaman katalog dan pembaca PDF tetap dipertahankan.
 |
 */
 

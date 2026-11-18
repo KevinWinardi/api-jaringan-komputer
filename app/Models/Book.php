@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    public $fillable = [
+    protected $fillable = [
         'kode',
         'judul',
         'penulis',
@@ -14,11 +14,15 @@ class Book extends Model
         'kategori',
         'stok',
         'open_library_key',
-        'cover_id'
+        'cover_id',
+        'tingkat_kesulitan',
     ];
 
-    public $casts = [
+    protected $casts = [
         'penulis' => 'array',
         'kategori' => 'array',
+        'tahun' => 'integer',
+        'stok' => 'integer',
+        'cover_id' => 'integer',
     ];
 }

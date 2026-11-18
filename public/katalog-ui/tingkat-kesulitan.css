@@ -1,0 +1,81 @@
+/* Fitur tingkat kesulitan. File CSS utama tidak diubah. */
+.filters.filters-level {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, .9fr) auto;
+}
+
+.level-summary {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 24px;
+}
+
+.level-summary h2 {
+    margin-bottom: 14px;
+    font-size: 1.3rem;
+}
+
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.level-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 16px;
+    background: rgb(226 224 245 / 60%);
+    border-radius: 16px;
+}
+
+.level-stat strong {
+    font: 700 1.85rem/1.1 var(--heading);
+    color: var(--indigo);
+}
+
+.level-stat span {
+    color: var(--muted);
+    font-size: .87rem;
+}
+
+.book-meta .difficulty {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 99px;
+    padding: .24rem .62rem;
+    color: #314325;
+    background: #e4f0cb;
+    font-size: .79rem;
+    font-weight: 700;
+}
+
+.book-meta .difficulty[data-empty="true"] {
+    color: var(--muted);
+    background: #eeedf4;
+}
+
+@media (max-width: 1000px) {
+    .filters.filters-level {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filters.filters-level > .actions {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 670px) {
+    .filters.filters-level {
+        grid-template-columns: 1fr;
+    }
+
+    .filters.filters-level > .actions {
+        grid-column: auto;
+    }
+
+    .level-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

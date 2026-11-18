@@ -3,31 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-            'nama_perangkat' => 'required|string|max:50',
-            'mode' => 'required|in:baca,kelola',
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+            'nama_perangkat' => ['required', 'string', 'max:50'],
+            'mode' => ['required', 'in:baca,kelola'],
         ]);
 
         $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
             return response()->json([
-                'message' => 'Email atau kata sandi tidak sesuai'
+                'message' => 'Email atau kata sandi tidak sesuai.',
             ], 401);
         }
 
-        $abilities = $data['mode'] === 'baca' ? ['book:read'] : ['book:read', 'book:write'];
+        if ($data['mode'] === 'kelola' && ! $user->is_admin) {
+            return response()->json([
+                'message' => 'Hanya pengelola yang dapat menggunakan mode kelola.',
+            ], 403);
+        }
 
-        $token = $user->createToken($data['nama_perangkat'], $abilities, now()->addHours(2));
+        $abilities = $data['mode'] === 'kelola'
+            ? ['book:read', 'book:write']
+            : ['book:read'];
+
+        $token = $user->createToken(
+            $data['nama_perangkat'],
+            $abilities,
+            now()->addHours(2)
+        );
 
         return response()->json([
             'token_type' => 'Bearer',
@@ -37,20 +50,24 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me(Request $request)
+    public function me(Request $request): JsonResponse
     {
         $user = $request->user();
-        return response()->json(['data' => [
-            'id' => $user->id,
-            'nama' => $user->name,
-            'email' => $user->email,
-            'is_admin' =>  $user->is_admin,
-        ]]);
+
+        return response()->json([
+            'data' => [
+                'id' => (int) $user->id,
+                'nama' => $user->name,
+                'email' => $user->email,
+                'is_admin' => (bool) $user->is_admin,
+            ],
+        ]);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
+
         return response()->json([
             'message' => 'Token saat ini sudah dicabut.',
         ]);
